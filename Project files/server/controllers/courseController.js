@@ -5,21 +5,22 @@ const User = require('../models/User'); // For role check
 
 // ✅ Add Course (Admin only)
 const addCourse = async (req, res) => {
-  const { title, description, category, userId } = req.body || {};
+  const { title, description, category, userId, isPaid, price } = req.body || {};
   const file = req.file ? req.file.filename : null;
 
   try {
     const uploader = await User.findById(userId);
-    if (!uploader || uploader.role !== 'admin') {
-      return res.status(403).json({ message: 'Only admins can upload courses' });
-    }
-
+   if (!uploader || (uploader.role !== 'admin' && uploader.role !== 'instructor')) {
+  return res.status(403).json({ message: 'Only admins or instructors can upload courses' });
+}
     const course = await Course.create({
       title,
       description,
       category,
       file,
-      uploadedBy: userId
+      uploadedBy: userId,
+      isPaid: isPaid === 'true',
+      price: parseFloat(price) || 0
     });
 
     res.status(201).json(course);
@@ -29,21 +30,24 @@ const addCourse = async (req, res) => {
   }
 };
 
-// ✅ Update Course (including optional file update + cleanup)
+// ✅ Update Course (Admin only)
 const updateCourse = async (req, res) => {
-  const { title, description, category, userId } = req.body || {};
+  const { title, description, category, userId, isPaid, price } = req.body || {};
   const file = req.file ? req.file.filename : null;
-
-  console.log("REQ.BODY:", req.body);  // Debugging
-  console.log("REQ.FILE:", req.file);  // Debugging
 
   try {
     const user = await User.findById(userId);
-    if (!user || user.role !== 'admin') {
+   if (!user || (user.role !== 'admin' && user.role !== 'instructor')) {
       return res.status(403).json({ message: 'Only admins can update courses' });
     }
 
-    const updateData = { title, description, category };
+    const updateData = {
+      title,
+      description,
+      category,
+      isPaid: isPaid === 'true',
+      price: parseFloat(price) || 0
+    };
 
     if (file) {
       const oldCourse = await Course.findById(req.params.id);
@@ -62,7 +66,7 @@ const updateCourse = async (req, res) => {
   }
 };
 
-// ✅ Delete Course (including file cleanup)
+// ✅ Delete Course
 const deleteCourse = async (req, res) => {
   try {
     const course = await Course.findById(req.params.id);

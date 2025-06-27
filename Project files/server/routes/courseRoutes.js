@@ -8,10 +8,10 @@ const {
 } = require('../controllers/courseController');
 const Course = require('../models/Course');
 
-// Upload course with file
+// ✅ Add new course (Admin only, with optional file, paid/free toggle)
 router.post('/add', upload.single('file'), addCourse);
 
-// Get all courses
+// ✅ Get all courses (public access)
 router.get('/all', async (req, res) => {
   try {
     const all = await Course.find();
@@ -21,10 +21,10 @@ router.get('/all', async (req, res) => {
   }
 });
 
-// ✅ Update course (with optional file)
+// ✅ Update existing course (Admin only, optional file)
 router.put('/:id', upload.single('file'), updateCourse);
 
-// Delete course
+// ✅ Delete course (Admin only)
 router.delete('/:id', deleteCourse);
 
 module.exports = router;

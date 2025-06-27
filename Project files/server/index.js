@@ -26,7 +26,7 @@ app.use(express.json());
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/courses', require('./routes/courseRoutes'));
 app.use('/api/enroll', require('./routes/enrollRoutes'));
-
+app.use('/api/comments', require('./routes/commentRoutes'));  // ✅ Comment routes added
 // MongoDB connection and server start
 const PORT = process.env.PORT || 5000;
 

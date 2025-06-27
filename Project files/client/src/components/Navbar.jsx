@@ -50,10 +50,10 @@ function Navbar() {
           ) : (
             <>
               {user.role === "admin" && (
-                <>
-                  <NavLink to="/admin" className={linkStyle}>Admin</NavLink>
-                  <NavLink to="/upload" className={linkStyle}>Upload</NavLink>
-                </>
+                <NavLink to="/admin" className={linkStyle}>Admin</NavLink>
+              )}
+              {(user.role === "admin" || user.role === "instructor") && (
+                <NavLink to="/upload" className={linkStyle}>Upload</NavLink>
               )}
               <NavLink to="/courses" className={linkStyle}>Courses</NavLink>
               <NavLink to="/my-courses" className={linkStyle}>My Courses</NavLink>
@@ -83,10 +83,10 @@ function Navbar() {
           ) : (
             <>
               {user.role === "admin" && (
-                <>
-                  <NavLink to="/admin" className={linkStyle} onClick={() => setMobileOpen(false)}>Admin</NavLink>
-                  <NavLink to="/upload" className={linkStyle} onClick={() => setMobileOpen(false)}>Upload</NavLink>
-                </>
+                <NavLink to="/admin" className={linkStyle} onClick={() => setMobileOpen(false)}>Admin</NavLink>
+              )}
+              {(user.role === "admin" || user.role === "instructor") && (
+                <NavLink to="/upload" className={linkStyle} onClick={() => setMobileOpen(false)}>Upload</NavLink>
               )}
               <NavLink to="/courses" className={linkStyle} onClick={() => setMobileOpen(false)}>Courses</NavLink>
               <NavLink to="/my-courses" className={linkStyle} onClick={() => setMobileOpen(false)}>My Courses</NavLink>

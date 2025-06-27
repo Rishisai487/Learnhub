@@ -6,6 +6,7 @@ function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('student'); // New state for role
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
@@ -15,6 +16,7 @@ function Signup() {
         name,
         email,
         password,
+        role, // Include role in request
       });
       alert('Signup successful! Please login.');
       navigate('/login');
@@ -52,8 +54,17 @@ function Signup() {
           value={password}
           required
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full px-4 py-2 mb-6 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          className="w-full px-4 py-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
         />
+
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value)}
+          className="w-full px-4 py-2 mb-6 border rounded-md focus:ring focus:ring-indigo-300"
+        >
+          <option value="student">Student</option>
+          <option value="instructor">Instructor</option>
+        </select>
 
         <button
           type="submit"

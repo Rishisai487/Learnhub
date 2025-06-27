@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import CommentSection from '../components/CommentSection';
 
 function CourseList() {
   const [courses, setCourses] = useState([]);
@@ -30,13 +31,21 @@ function CourseList() {
     setFiltered(match);
   };
 
-  const handleEnroll = async (courseId) => {
+  const handleEnroll = async (course) => {
+    if (course.isPaid && course.price > 0) {
+      const confirm = window.confirm(`This course costs ₹${course.price}. Proceed to payment?`);
+      if (!confirm) return;
+
+      // Simulate payment
+      alert("✅ Payment successful!");
+    }
+
     try {
       await axios.post('https://learnhub-backend-qtw7.onrender.com/api/enroll/enroll', {
         userId: user.id,
-        courseId: courseId
+        courseId: course._id
       });
-      alert("Enrolled successfully!");
+      alert("🎉 Enrolled successfully!");
     } catch (err) {
       alert(err.response?.data?.message || "Enrollment failed");
     }
@@ -90,6 +99,10 @@ function CourseList() {
                 <strong className="text-gray-700">Category:</strong> {course.category}
               </p>
 
+              {course.isPaid && (
+                <p className="text-sm mt-1 text-red-500 font-medium">💰 Price: ₹{course.price}</p>
+              )}
+
               {course.file && (
                 <div className="mt-4">
                   {course.file.endsWith('.pdf') ? (
@@ -141,10 +154,10 @@ function CourseList() {
 
               {user && (
                 <button
-                  onClick={() => handleEnroll(course._id)}
+                  onClick={() => handleEnroll(course)}
                   className="mt-4 w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition"
                 >
-                  Enroll
+                  {course.isPaid ? `Buy ₹${course.price}` : 'Enroll'}
                 </button>
               )}
 
@@ -164,6 +177,10 @@ function CourseList() {
                   </button>
                 </div>
               )}
+
+              <div className="mt-6">
+                <CommentSection courseId={course._id} />
+              </div>
             </div>
           ))
         ) : (

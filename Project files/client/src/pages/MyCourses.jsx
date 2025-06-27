@@ -3,6 +3,7 @@ import axios from 'axios';
 
 function MyCourses() {
   const [courses, setCourses] = useState([]);
+  const [activeComments, setActiveComments] = useState(null); // Track active comment section
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
@@ -63,6 +64,21 @@ function MyCourses() {
                       📎 View File
                     </a>
                   )}
+                </div>
+              )}
+
+              <button
+                onClick={() =>
+                  setActiveComments(activeComments === course._id ? null : course._id)
+                }
+                className="mt-4 text-sm text-indigo-600 hover:underline"
+              >
+                {activeComments === course._id ? 'Hide Comments' : '💬 View Comments'}
+              </button>
+
+              {activeComments === course._id && (
+                <div className="mt-3 border-t pt-3 text-sm text-gray-600">
+                  Comments will appear here (backend integration next).
                 </div>
               )}
             </div>

@@ -6,6 +6,8 @@ function CourseUpload() {
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [file, setFile] = useState(null);
+  const [isPaid, setIsPaid] = useState(false);
+  const [price, setPrice] = useState('');
   const user = JSON.parse(localStorage.getItem("user"));
 
   const handleSubmit = async (e) => {
@@ -17,6 +19,10 @@ function CourseUpload() {
     formData.append('category', category);
     formData.append('userId', user.id);
     formData.append('file', file);
+    formData.append('isPaid', isPaid);
+    if (isPaid) {
+      formData.append('price', price);
+    }
 
     try {
       await axios.post('https://learnhub-backend-qtw7.onrender.com/api/courses/add', formData, {
@@ -27,6 +33,8 @@ function CourseUpload() {
       setDescription('');
       setCategory('');
       setFile(null);
+      setIsPaid(false);
+      setPrice('');
     } catch (err) {
       alert('❌ Failed to upload course');
     }
@@ -68,6 +76,27 @@ function CourseUpload() {
           onChange={(e) => setCategory(e.target.value)}
           className="w-full border px-4 py-2 rounded-md focus:ring focus:ring-indigo-300"
         />
+
+        <div className="flex items-center space-x-3">
+          <input
+            type="checkbox"
+            checked={isPaid}
+            onChange={() => setIsPaid(!isPaid)}
+            className="form-checkbox"
+          />
+          <label className="text-sm text-gray-700">Is this a paid course?</label>
+        </div>
+
+        {isPaid && (
+          <input
+            type="number"
+            placeholder="Price (₹)"
+            value={price}
+            required
+            onChange={(e) => setPrice(e.target.value)}
+            className="w-full border px-4 py-2 rounded-md focus:ring focus:ring-indigo-300"
+          />
+        )}
 
         <input
           type="file"
